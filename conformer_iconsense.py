@@ -649,7 +649,7 @@ epochs=2000
 
 eval_interval=10
 
-subject_ids = range(4, 9 + 1)
+subject_ids = range(1, 9 + 1)
 subject_ids = list(subject_ids)
 
 for subject_id in subject_ids:
@@ -671,26 +671,69 @@ for subject_id in subject_ids:
     )
 
     gt_label_counts = []
+    split_names = []
+    class_counts_per_split = []
 
-    for split, dataset_info in dataset_infos.items():
+    for split in ["train", "val", "test"]:
+        dataset_info = dataset_infos[split]
         eeg_data = dataset_info["eeg_data"]
         labels = dataset_info["labels"]
 
         unique_labels, counts = np.unique(labels, return_counts=True)
 
-        for label, count in zip(unique_labels, counts):
-            class_name = class_names[label]
-            percent = count / len(labels)
+        count_map = dict(zip(unique_labels, counts))
+        full_counts = [count_map.get(cls_idx, 0) for cls_idx in range(num_classes)]
 
-            gt_label_counts.append({
-                "Split": split,
-                "ClassName": class_name,
-                "LabelCount": count,
-                "Percent": f"{percent:.1%}"
-            })
+        split_names.append(split)
+        class_counts_per_split.append(full_counts)
 
-    gt_label_counts_df = pd.DataFrame(gt_label_counts)
-    display(gt_label_counts_df)
+        # for label, count in zip(unique_labels, counts):
+        #     class_name = class_names[label]
+        #     percent = count / len(labels)
+
+        #     gt_label_counts.append({
+        #         "Split": split,
+        #         "ClassName": class_name,
+        #         "LabelCount": count,
+        #         "Percent": f"{percent:.1%}"
+        #     })
+
+    # gt_label_counts_df = pd.DataFrame(gt_label_counts)
+    # display(gt_label_counts_df)
+
+    class_counts_per_split = np.array(class_counts_per_split)
+
+    x = np.arange(len(split_names))  # split positions
+    bar_width = 0.2
+
+    fig, ax = plt.subplots(figsize=(10, 7))
+    for i in range(num_classes):
+        bars = ax.bar(x + i * bar_width,
+                class_counts_per_split[:, i],
+                width=bar_width,
+                label=class_names[i])
+
+        # Add text labels on top of each bar
+        for bar in bars:
+            height = bar.get_height()
+            ax.text(
+                bar.get_x() + bar.get_width() / 2,
+                height,
+                f'{height:.0f}',
+                ha='center',
+                va='bottom',
+            )
+
+    # Labels and legend
+    ax.set_xlabel('Dataset Split')
+    ax.set_ylabel('Label Count')
+    ax.set_title(f'{subject} Class Distribution per Split')
+    ax.set_xticks(x + bar_width * (num_classes - 1) / 2, split_names)
+    ax.legend()
+    ax.grid(axis='y', linestyle='--', alpha=0.5)
+    plt.tight_layout()
+    plt.savefig(f"{subject}_class_dist_per_split.png")
+    plt.close(fig)
 
     model = Conformer(num_classes=num_classes)
 

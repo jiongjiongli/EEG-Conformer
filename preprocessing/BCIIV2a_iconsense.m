@@ -34,7 +34,6 @@ function result = load_data(data_dir_path, output_dir_path)
     result = 0;
 end
 
-
 root_dir_path = 'E:\data\eeg\bci_competition';
 data_dir_path = fullfile(root_dir_path, 'BCICIV_2a_gdf');
 output_dir_path = fullfile(root_dir_path, 'BCICIV_2a_csv');
@@ -47,11 +46,11 @@ output_dir_path = fullfile(root_dir_path, 'BCICIV_2b_csv');
 
 result = load_data(data_dir_path, output_dir_path);
 
-root_dir_path = 'E:\data\bci_competition';
+root_dir_path = 'E:\data\eeg\bci_competition';
 label_dir_path = fullfile(root_dir_path, 'BCICIV_2a_labels', 'true_labels');
 output_dir_path = fullfile(root_dir_path, 'BCICIV_2a_csv');
 
-root_dir_path = 'E:\data\bci_competition';
+root_dir_path = 'E:\data\eeg\bci_competition';
 label_dir_path = fullfile(root_dir_path, 'BCICIV_2b_labels', 'true_labels');
 output_dir_path = fullfile(root_dir_path, 'BCICIV_2b_csv');
 
@@ -80,11 +79,11 @@ end
 subject_index = 6; % 1-9
 %% T data
 session_type = 'T'; % T and E
-dir_1 = ['E:\data\bci_competition\BCICIV_2a_gdf\A0',num2str(subject_index),session_type,'.gdf']; % set your path of the downloaded data
+dir_1 = ['E:\data\eeg\bci_competition\BCICIV_2a_gdf\A0',num2str(subject_index),session_type,'.gdf']; % set your path of the downloaded data
 [s, HDR] = sload(dir_1);
 % Label
 % label = HDR.Classlabel;
-labeldir_1 = ['E:\data\bci_competition\BCICIV_2a_labels\true_labels\A0',num2str(subject_index),session_type,'.mat'];
+labeldir_1 = ['E:\data\eeg\bci_competition\BCICIV_2a_labels\true_labels\A0',num2str(subject_index),session_type,'.mat'];
 load(labeldir_1);
 label_1 = classlabel;
 

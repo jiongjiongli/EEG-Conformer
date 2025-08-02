@@ -5,7 +5,7 @@ import mne
 
 
 sample_freq = 250
-l_freq = 4.0  # high-pass (lower cutoff)
+l_freq = 4.0   # high-pass (lower cutoff)
 h_freq = 40.0  # low-pass (upper cutoff)
 # Event types:
 # 276   0x0114 Idling EEG (eyes open)
